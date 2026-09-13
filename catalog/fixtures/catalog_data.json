@@ -1,0 +1,57 @@
+[
+{
+  "model": "catalog.category",
+  "pk": 5,
+  "fields": {
+    "name": "Электроника",
+    "description": "Электронные товары"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 6,
+  "fields": {
+    "name": "Книги",
+    "description": "Книги различных жанров"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 7,
+  "fields": {
+    "name": "Смартфон",
+    "description": "Современный смартфон",
+    "image": "",
+    "category": 5,
+    "price": "59990.00",
+    "created_at": "2026-09-13T13:57:04.733Z",
+    "updated_at": "2026-09-13T13:57:04.733Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 8,
+  "fields": {
+    "name": "Ноутбук",
+    "description": "Ноутбук для работы",
+    "image": "",
+    "category": 5,
+    "price": "89990.00",
+    "created_at": "2026-09-13T13:57:04.744Z",
+    "updated_at": "2026-09-13T13:57:04.744Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 9,
+  "fields": {
+    "name": "Python для начинающих",
+    "description": "Учебная книга по Python",
+    "image": "",
+    "category": 6,
+    "price": "1500.00",
+    "created_at": "2026-09-13T13:57:04.745Z",
+    "updated_at": "2026-09-13T13:57:04.745Z"
+  }
+}
+]
