@@ -1,0 +1,84 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}{{ product.name }} — Online Shop{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10">
+
+                <div class="card shadow-sm">
+
+                    <div class="row g-0">
+
+                        {% if product.image %}
+                            <div class="col-md-5">
+                                <img
+                                    src="{{ product.image.url }}"
+                                    class="img-fluid rounded-start w-100 h-100"
+                                    alt="{{ product.name }}"
+                                    style="object-fit: cover;"
+                                >
+                            </div>
+                        {% endif %}
+
+                        <div class="{% if product.image %}col-md-7{% else %}col-md-12{% endif %}">
+                            <div class="card-body p-4">
+
+                                <h1 class="card-title mb-4">
+                                    {{ product.name }}
+                                </h1>
+
+                                <p class="mb-3">
+                                    <strong>Категория:</strong>
+                                    {{ product.category.name }}
+                                </p>
+
+                                <p class="mb-3">
+                                    <strong>Описание:</strong>
+                                </p>
+
+                                <p class="card-text">
+                                    {{ product.description }}
+                                </p>
+
+                                <p class="fs-3 fw-bold mt-4">
+                                    {{ product.price }} ₽
+                                </p>
+
+                                <p class="text-muted">
+                                    Дата создания:
+                                    {{ product.created_at|date:"d.m.Y H:i" }}
+                                </p>
+
+                                <p class="text-muted">
+                                    Дата изменения:
+                                    {{ product.updated_at|date:"d.m.Y H:i" }}
+                                </p>
+
+                                <a
+                                    href="{% url 'home' %}"
+                                    class="btn btn-secondary mt-3"
+                                >
+                                    Вернуться к товарам
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
