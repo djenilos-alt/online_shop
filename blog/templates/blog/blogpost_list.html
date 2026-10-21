@@ -1,0 +1,29 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<h1>Блог</h1>
+
+<a href="{% url 'blog:post_create' %}" class="btn btn-primary mb-3">
+    Создать запись
+</a>
+
+{% for post in posts %}
+    <article class="mb-4">
+        {% if post.preview %}
+            <img src="{{ post.preview.url }}" alt="{{ post.title }}"
+                 style="max-width: 250px;">
+        {% endif %}
+
+        <h2>
+            <a href="{% url 'blog:post_detail' post.pk %}">
+                {{ post.title }}
+            </a>
+        </h2>
+
+        <p>{{ post.content|truncatechars:200 }}</p>
+        <small>Просмотров: {{ post.views_count }}</small>
+    </article>
+{% empty %}
+    <p>Опубликованных записей пока нет.</p>
+{% endfor %}
+{% endblock %}

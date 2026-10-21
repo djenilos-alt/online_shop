@@ -1,0 +1,14 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<h1>Удаление записи</h1>
+<p>Ты уверена, что хочешь удалить «{{ object.title }}»?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Подтвердить удаление</button>
+    <a href="{% url 'blog:post_detail' object.pk %}" class="btn btn-secondary">
+        Отмена
+    </a>
+</form>
+{% endblock %}

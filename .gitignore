@@ -6,3 +6,5 @@ env/
 .env
 *.sqlite3
 db.sqlite3
+media/
+blog/previews/
