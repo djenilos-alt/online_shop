@@ -1,8 +1,14 @@
-from django.contrib import messages
-from django.shortcuts import get_object_or_404, render
-from django.views.generic import DetailView, FormView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    FormView,
+    ListView,
+    UpdateView,
+)
 
-from catalog.forms import ContactMessageForm
+from catalog.forms import ContactMessageForm, ProductForm
 from catalog.models import Product
 
 
@@ -18,23 +24,36 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
 
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("home")
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "product_detail",
+            kwargs={"pk": self.object.pk},
+        )
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("home")
+
+
 class ContactsView(FormView):
     template_name = "catalog/contacts.html"
     form_class = ContactMessageForm
-    success_url = "/contacts/"
+    success_url = reverse_lazy("contacts")
 
     def form_valid(self, form):
         form.save()
-        return render(
-            self.request,
-            self.template_name,
-            {
-                "form": self.form_class(),
-                "success_message": "Сообщение успешно отправлено!",
-            },
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["success_message"] = self.request.GET.get("success")
-        return context
+        return super().form_valid(form)
