@@ -1,0 +1,18 @@
+{% extends "catalog/base.html" %}
+
+{% if perms.blog.change_blogpost %}
+    <a href="{% url 'blog:post_update' post.pk %}" class="btn btn-warning">
+        Редактировать
+    </a>
+{% endif %}
+
+{% if perms.blog.delete_blogpost %}
+    <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-danger">
+        Удалить
+    </a>
+{% endif %}
+
+<a href="{% url 'blog:post_list' %}" class="btn btn-secondary">
+    Назад к блогу
+</a>
+{% endblock %}
