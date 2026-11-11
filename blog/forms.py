@@ -25,4 +25,3 @@ class BlogPostForm(forms.ModelForm):
                 "rows": 6,
             }),
         }
-

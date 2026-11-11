@@ -3,9 +3,11 @@
 {% block content %}
 <h1>Блог</h1>
 
-<a href="{% url 'blog:post_create' %}" class="btn btn-primary mb-3">
-    Создать запись
-</a>
+{% if perms.blog.add_blogpost %}
+    <a href="{% url 'blog:post_create' %}" class="btn btn-primary mb-3">
+        Создать запись
+    </a>
+{% endif %}
 
 {% for post in posts %}
     <article class="mb-4">
@@ -22,6 +24,20 @@
 
         <p>{{ post.content|truncatechars:200 }}</p>
         <small>Просмотров: {{ post.views_count }}</small>
+
+        {% if perms.blog.change_blogpost %}
+            <a href="{% url 'blog:post_update' post.pk %}"
+               class="btn btn-warning btn-sm">
+                Редактировать
+            </a>
+        {% endif %}
+
+        {% if perms.blog.delete_blogpost %}
+            <a href="{% url 'blog:post_delete' post.pk %}"
+               class="btn btn-danger btn-sm">
+                Удалить
+            </a>
+        {% endif %}
     </article>
 {% empty %}
     <p>Опубликованных записей пока нет.</p>

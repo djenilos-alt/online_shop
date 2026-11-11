@@ -1,3 +1,8 @@
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
+from django.db.models import Q
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -17,13 +22,28 @@ class BlogPostListView(ListView):
     context_object_name = "posts"
 
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True).order_by("-created_at")
+        user = self.request.user
+
+        if user.is_authenticated and user.has_perm("blog.view_blogpost"):
+            return BlogPost.objects.all().order_by("-created_at")
+
+        return BlogPost.objects.filter(
+            is_published=True
+        ).order_by("-created_at")
 
 
 class BlogPostDetailView(DetailView):
     model = BlogPost
     template_name = "blog/blogpost_detail.html"
     context_object_name = "post"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated and user.has_perm("blog.view_blogpost"):
+            return BlogPost.objects.all()
+
+        return BlogPost.objects.filter(is_published=True)
 
     def get_object(self, queryset=None):
         post = super().get_object(queryset=queryset)
@@ -32,23 +52,38 @@ class BlogPostDetailView(DetailView):
         return post
 
 
-class BlogPostCreateView(CreateView):
+class BlogPostCreateView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    CreateView,
+):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blogpost_form.html"
     success_url = reverse_lazy("blog:post_list")
+    permission_required = "blog.add_blogpost"
 
 
-class BlogPostUpdateView(UpdateView):
+class BlogPostUpdateView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    UpdateView,
+):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blogpost_form.html"
+    permission_required = "blog.change_blogpost"
 
     def get_success_url(self):
         return reverse("blog:post_detail", kwargs={"pk": self.object.pk})
 
 
-class BlogPostDeleteView(DeleteView):
+class BlogPostDeleteView(
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+    DeleteView,
+):
     model = BlogPost
     template_name = "blog/blogpost_confirm_delete.html"
     success_url = reverse_lazy("blog:post_list")
+    permission_required = "blog.delete_blogpost"

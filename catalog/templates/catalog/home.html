@@ -19,9 +19,11 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Наши продукты</h2>
 
-            <a href="{% url 'product_create' %}" class="btn btn-success">
-                Добавить продукт
-            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'product_create' %}" class="btn btn-success">
+                    Добавить продукт
+                </a>
+            {% endif %}
         </div>
 
         <div class="row">
@@ -39,15 +41,66 @@
 
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+
+                            <p class="card-text">
+                                {{ product.description|truncatechars:100 }}
+                            </p>
+
                             <p class="fw-bold">{{ product.price }} ₽</p>
 
-                            <a
-                                href="{% url 'product_detail' product.pk %}"
-                                class="btn btn-outline-primary"
-                            >
-                                Подробнее
-                            </a>
+                            {% if product.is_published %}
+                                <span class="badge bg-success mb-2">
+                                    Опубликован
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary mb-2">
+                                    Не опубликован
+                                </span>
+                            {% endif %}
+
+                            {% if user.is_authenticated %}
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a
+                                        href="{% url 'product_detail' product.pk %}"
+                                        class="btn btn-outline-primary"
+                                    >
+                                        Подробнее
+                                    </a>
+
+                                    {% if product.owner == user or user.is_superuser or perms.catalog.change_product %}
+                                        <a
+                                            href="{% url 'product_update' product.pk %}"
+                                            class="btn btn-warning"
+                                        >
+                                            Редактировать
+                                        </a>
+                                    {% endif %}
+
+                                    {% if product.owner == user or user.is_superuser or perms.catalog.delete_product %}
+                                        <a
+                                            href="{% url 'product_delete' product.pk %}"
+                                            class="btn btn-danger"
+                                        >
+                                            Удалить
+                                        </a>
+                                    {% endif %}
+
+                                    {% if product.is_published and perms.catalog.can_unpublish_product %}
+                                        <form
+                                            method="post"
+                                            action="{% url 'product_unpublish' product.pk %}"
+                                        >
+                                            {% csrf_token %}
+                                            <button
+                                                type="submit"
+                                                class="btn btn-secondary"
+                                            >
+                                                Снять с публикации
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
