@@ -1,0 +1,59 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-4">{{ category.name }}</h1>
+
+        {% if category.description %}
+            <p class="lead mb-4">{{ category.description }}</p>
+        {% endif %}
+
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if product.image %}
+                            <img
+                                src="{{ product.image.url }}"
+                                class="card-img-top"
+                                alt="{{ product.name }}"
+                                style="height: 220px; object-fit: cover;"
+                            >
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+
+                            <p class="card-text">
+                                {{ product.description|truncatechars:100 }}
+                            </p>
+
+                            <p class="fw-bold">{{ product.price }} ₽</p>
+
+                            <a
+                                href="{% url 'product_detail' product.pk %}"
+                                class="btn btn-outline-primary"
+                            >
+                                Подробнее
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">
+                        В этой категории пока нет продуктов.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary mt-3">
+            Вернуться в каталог
+        </a>
+    </div>
+</section>
+{% endblock %}
