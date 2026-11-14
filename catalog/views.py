@@ -43,8 +43,6 @@ class HomeView(ListView):
         ).distinct()
 
 
-@method_decorator(cache_page(60 * 15), name="dispatch")
-@method_decorator(vary_on_cookie, name="dispatch")
 
 class CategoryProductsView(ListView):
     template_name = "catalog/category_products.html"
@@ -82,6 +80,9 @@ class CategoryProductsView(ListView):
         )
         return context
 
+
+@method_decorator(cache_page(60 * 15), name="dispatch")
+@method_decorator(vary_on_cookie, name="dispatch")
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "catalog/product_detail.html"
